@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - zawy-network
+
+  # .NET API
+  api:
+    build:
+      context: ./Zawy.Restaurant.Api
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ZawyRestaurant;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=true
+    depends_on:
+      - sqlserver
+    networks:
+      - zawy-network
+    volumes:
+      - ./Zawy.Restaurant.Api/wwwroot/uploads:/app/wwwroot/uploads
+
+  # Angular Frontend
+  frontend:
+    build:
+      context: ./zawy-web
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./zawy-web:/app
+      - /app/node_modules
+    networks:
+      - zawy-network
+    depends_on:
+      - api
+
+volumes:
+  sqlserver_data:
+
+networks:
+  zawy-network:
+    driver: bridge

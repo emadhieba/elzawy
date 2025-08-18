@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables from Design Spec */
+:root {
+  /* Colors */
+  --color-primary: #C8102E;
+  --color-primary-dark: #8E0D22;
+  --color-accent: #FFD166;
+  --color-accent-dark: #E6B84F;
+  --color-neutral-950: #0B0B0F;
+  --color-neutral-800: #1F2329;
+  --color-neutral-600: #4B5563;
+  --color-neutral-300: #D1D5DB;
+  --color-neutral-100: #F5F6F8;
+  --color-surface: #FFFFFF;
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  
+  /* Typography */
+  --font-ar: 'Tajawal', system-ui, sans-serif;
+  --font-en: 'Inter', system-ui, sans-serif;
+  
+  /* Spacing */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  
+  /* Shadows */
+  --shadow-card: 0 10px 24px 0 rgba(0,0,0,0.08);
+  --shadow-hover: 0 14px 28px 0 rgba(0,0,0,0.12);
+  --shadow-soft: 0 6px 16px rgba(0,0,0,0.06);
+  
+  /* Motion */
+  --duration-fast: 120ms;
+  --duration-base: 240ms;
+  --duration-slow: 400ms;
+  --easing-in-out: cubic-bezier(0.4,0,0.2,1);
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="ltr"] {
+  text-align: left;
+}
+
+/* Custom Components */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl font-medium transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary/25;
+  }
+  
+  .btn-sm {
+    @apply h-9 px-4 text-sm;
+  }
+  
+  .btn-md {
+    @apply h-11 px-6 text-base;
+  }
+  
+  .btn-lg {
+    @apply h-12 px-8 text-lg;
+  }
+  
+  .btn-filled {
+    @apply bg-primary text-surface hover:bg-primary-dark hover:shadow-hover hover:scale-105;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-surface;
+  }
+  
+  .btn-ghost {
+    @apply text-primary hover:bg-primary/10;
+  }
+  
+  .card {
+    @apply bg-surface rounded-lg shadow-card transition-all duration-300 hover:shadow-hover hover:scale-105;
+  }
+  
+  .input {
+    @apply h-11 px-4 rounded-md border-2 border-neutral-300 bg-surface text-neutral-800 placeholder-neutral-600 transition-all duration-300 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25;
+  }
+  
+  .section-heading {
+    @apply text-center mb-7 relative;
+  }
+  
+  .section-heading::after {
+    content: '';
+    @apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-primary;
+  }
+  
+  .section-heading::before {
+    content: '🌶️';
+    @apply absolute -bottom-2 left-1/2 transform -translate-x-1/2 text-lg;
+  }
+}
+
+/* Animations */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn var(--duration-base) var(--easing-in-out);
+  }
+  
+  .animate-slide-up {
+    animation: slideUp var(--duration-base) var(--easing-in-out);
+  }
+  
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-neutral-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-neutral-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-neutral-600;
+}
+
+/* Focus Styles */
+*:focus-visible {
+  @apply outline-none ring-2 ring-primary/25;
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

@@ -1,0 +1,221 @@
+import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { CartService } from '../../services/cart.service';
+import { Product } from '../../models/product.model';
+
+interface CartItem {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  quantity?: number;
+  total?: number;
+}
+
+type MenuItem = Product;
+
+@Component({
+  selector: 'app-menu',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
+  template: `
+    <div class="container mx-auto px-4 py-8">
+      <!-- Category Filter -->
+      <div class="mb-8">
+        <div class="flex flex-wrap gap-2 justify-center">
+          <button 
+            *ngFor="let category of categories"
+            (click)="filterByCategory(category)"
+            [class.bg-primary-600]="selectedCategory === category"
+            class="px-4 py-2 rounded-full text-sm font-medium transition-colors"
+          >
+            {{ category }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu Items Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div 
+          *ngFor="let item of filteredItems" 
+          class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+        >
+          <!-- Product Image -->
+          <div class="relative h-48 bg-gray-100">
+            <img 
+              [src]="item.image" 
+              [alt]="item.name"
+              class="w-full h-full object-cover"
+            >
+            
+            <!-- Badges -->
+            <div class="absolute top-2 right-2 flex flex-col gap-1">
+              <span *ngIf="item.isNew" class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                جديد
+              </span>
+              <span *ngIf="item.isPopular" class="bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                الأكثر مبيعاً
+              </span>
+              <span *ngIf="item.discount" class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                خصم {{ item.discount }}%
+              </span>
+            </div>
+          </div>
+
+          <!-- Product Info -->
+          <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ item.name }}</h3>
+            <p class="text-gray-600 text-sm mb-3">{{ item.description }}</p>
+            
+            <!-- Price -->
+            <div class="flex items-center justify-between mt-2">
+              <div class="flex items-center gap-2">
+                <span class="text-lg font-bold text-gray-900">
+                  {{ getPriceAfterDiscount(item) }} ج.م
+                </span>
+                <span *ngIf="item.discount" class="text-sm text-gray-500 line-through">
+                  {{ item.price }} ج.م
+                </span>
+              </div>
+
+              <!-- Add to Cart Button -->
+              <button
+                (click)="addToCart(item)"
+                [disabled]="isAddingToCart"
+                class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-1"
+                [class.opacity-50]="isAddingToCart"
+              >
+                <span *ngIf="!isAddingToCart">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                  </svg>
+                </span>
+                <span *ngIf="isAddingToCart">
+                  <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </span>
+                <span class="hidden sm:inline">أضف للسلة</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div 
+      *ngIf="showSuccessMessage"
+      class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 transition-opacity duration-300"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+      <span>تمت الإضافة إلى السلة بنجاح!</span>
+    </div>
+  `,
+  styles: [`
+    :host {
+      display: block;
+      min-height: 100vh;
+      background-color: #f9fafb;
+    }
+  `]
+})
+export class MenuComponent {
+  private cartService = inject(CartService);
+  private router = inject(Router);
+
+  // Menu data
+  menuItems: MenuItem[] = [];
+  categories: string[] = ['الكل', 'وجبات', 'مشروبات', 'حلويات', 'مقبلات'];
+  selectedCategory = 'الكل';
+  
+  // UI State
+  isAddingToCart = false;
+  showSuccessMessage = false;
+
+  // Filter items by selected category
+  get filteredItems() {
+    if (this.selectedCategory === 'الكل') {
+      return this.menuItems;
+    }
+    return this.menuItems.filter(item => item.category === this.selectedCategory);
+  }
+
+  // Calculate price after applying discount
+  getPriceAfterDiscount(item: MenuItem): number {
+    if (item.discount && item.discount > 0) {
+      return item.price - (item.price * item.discount / 100);
+    }
+    return item.price;
+  }
+
+  // Filter menu items by category
+  filterByCategory(category: string): void {
+    this.selectedCategory = category;
+  }
+
+  // Add item to cart
+  async addToCart(item: MenuItem): Promise<void> {
+    if (this.isAddingToCart) return;
+    
+    this.isAddingToCart = true;
+    
+    try {
+      // Calculate final price with discount if any
+      const price = item.discount 
+        ? this.getPriceAfterDiscount(item) 
+        : item.price;
+      
+      // Add to cart
+      this.cartService.addToCart({
+        id: item.id,
+        name: item.name,
+        price: price,
+        image: item.image
+      });
+      
+      // Show success message
+      this.showSuccessMessage = true;
+      setTimeout(() => {
+        this.showSuccessMessage = false;
+      }, 2000);
+      
+      // Navigate to cart after a short delay
+      setTimeout(() => {
+        this.router.navigate(['/cart']);
+      }, 1000);
+      
+    } finally {
+      this.isAddingToCart = false;
+    }
+  }
+
+  // TODO: Load menu items from a service
+  private loadMenuItems(): void {
+    // This should be replaced with an actual API call
+    this.menuItems = [
+      {
+        id: 1,
+        name: 'برجر لحم',
+        description: 'برجر لحم مشوي مع جبنة شيدر وخس وطماطم',
+        price: 45,
+        originalPrice: 55,
+        discount: 10,
+        category: 'وجبات',
+        image: 'assets/images/burger.jpg',
+        isNew: true,
+        isPopular: true,
+        available: true
+      },
+      // Add more menu items here
+    ];
+  }
+
+  ngOnInit(): void {
+    this.loadMenuItems();
+  }
+}

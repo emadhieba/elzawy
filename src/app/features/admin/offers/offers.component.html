@@ -1,1 +1,17 @@
-<p>offers works!</p>
+<div class="container mx-auto py-12">
+  <h2 class="text-3xl font-bold text-center mb-10 text-primary">عروضنا المميزة</h2>
+  <ng-container *ngIf="offers.length; else noOffers">
+    <div class="rounded-2xl shadow-sm bg-gradient-to-r from-accent via-primary/10 to-accent-dark p-8 mb-12 flex flex-wrap justify-center gap-8 items-center">
+      <div *ngFor="let offer of offers; let i = index" class="flex flex-col items-center gap-2 min-w-[180px]">
+        <span class="text-3xl">
+          {{ i % 3 === 0 ? '🔥' : (i % 3 === 1 ? '🥩' : '🥤') }}
+        </span>
+        <img [src]="'assets/offers/' + offer" alt="عرض" class="w-40 h-40 object-cover rounded-2xl shadow group-hover:scale-105 transition-transform duration-300" />
+        <span class="text-lg font-semibold text-[#333] truncate w-full text-center" [title]="offer">{{ offer }}</span>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #noOffers>
+    <div class="text-center text-neutral-600 py-16 text-xl">لا توجد عروض متاحة حالياً.</div>
+  </ng-template>
+</div>

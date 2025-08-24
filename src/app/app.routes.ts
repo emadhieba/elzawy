@@ -5,23 +5,33 @@ export const routes: Routes = [
   // Public Routes
   {
     path: '',
-    loadComponent: () => import('./features/public/home/home.component').then(m => m.HomeComponent),
+    loadComponent: () => import('./views/home/home.component').then(m => m.HomeComponent),
     title: 'الزاوي - الصفحة الرئيسية'
   },
   {
     path: 'menu',
-    loadComponent: () => import('./features/public/menu/menu.component').then(m => m.MenuComponent),
+    loadComponent: () => import('./views/menu/menu.component').then(m => m.MenuComponent),
     title: 'الزاوي - القائمة'
   },
   {
     path: 'offers',
-    loadComponent: () => import('./features/public/offers/offers.component').then(m => m.OffersComponent),
+    loadComponent: () => import('./views/offers/offers.component').then(m => m.OffersComponent),
     title: 'الزاوي - العروض'
   },
   {
     path: 'contact',
-    loadComponent: () => import('./features/public/contact/contact.component').then(m => m.ContactComponent),
+    loadComponent: () => import('./views/contact/contact.component').then(m => m.ContactComponent),
     title: 'الزاوي - اتصل بنا'
+  },
+  {
+    path: 'about',
+    loadComponent: () => import('./views/about/about.component').then(m => m.AboutComponent),
+    title: 'الزاوي - من نحن'
+  },
+  {
+    path: 'cart',
+    loadComponent: () => import('./views/cart/cart.component').then(m => m.CartComponent),
+    title: 'الزاوي - سلة التسوق'
   },
   
   // Admin Routes

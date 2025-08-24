@@ -1,1 +1,7 @@
-<p>categories works!</p>
+<div class="flex flex-wrap justify-center gap-6 py-6">
+  <button *ngFor="let cat of categories"
+    class="flex flex-col items-center justify-center w-24 h-24 rounded-full bg-white shadow-sm border border-neutral-200 text-primary hover:bg-primary hover:text-white hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/40 text-lg group">
+    <span class="text-3xl mb-2 transition-transform duration-200 group-hover:scale-110">{{ cat.icon }}</span>
+    <span class="text-sm font-semibold">{{ cat.name }}</span>
+  </button>
+</div>

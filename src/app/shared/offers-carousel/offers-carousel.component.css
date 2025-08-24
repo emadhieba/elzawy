@@ -1,0 +1,95 @@
+/* Import Swiper styles */
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+@import 'swiper/css/effect-fade';
+
+/* Custom pagination styles */
+.offers-swiper .swiper-pagination-bullet {
+  width: 0.75rem;
+  height: 0.75rem;
+  background: rgba(255, 255, 255, 0.6);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.offers-swiper .swiper-pagination-bullet-active {
+  background: white;
+  transform: scale(1.25);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Custom navigation button styles */
+.offers-swiper .swiper-button-prev,
+.offers-swiper .swiper-button-next {
+  transition: all 0.3s ease;
+}
+
+.offers-swiper .swiper-button-prev:hover,
+.offers-swiper .swiper-button-next:hover {
+  transform: scale(1.1);
+}
+
+/* RTL support for navigation */
+[dir="rtl"] .offers-swiper .swiper-button-prev {
+  right: 1rem;
+  left: auto;
+}
+
+[dir="rtl"] .offers-swiper .swiper-button-next {
+  left: 1rem;
+  right: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .offers-swiper .swiper-button-prev,
+  .offers-swiper .swiper-button-next {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+  }
+  
+  .offers-swiper .swiper-button-prev::after,
+  .offers-swiper .swiper-button-next::after {
+    font-size: 1.125rem !important;
+  }
+  
+  .offers-swiper .swiper-pagination-bullet {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+}
+
+/* Loading state */
+.offers-swiper img {
+  transition: opacity 0.3s ease;
+}
+
+.offers-swiper img[loading] {
+  opacity: 0;
+}
+
+.offers-swiper img:not([loading]) {
+  opacity: 1;
+}
+
+/* Smooth fade effect enhancement */
+.offers-swiper .swiper-slide {
+  transition: opacity 0.8s ease-in-out;
+}
+
+/* Accessibility improvements */
+.offers-swiper .swiper-button-prev,
+.offers-swiper .swiper-button-next {
+  outline: none;
+}
+
+.offers-swiper .swiper-button-prev:focus,
+.offers-swiper .swiper-button-next:focus {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.offers-swiper .swiper-pagination-bullet:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}

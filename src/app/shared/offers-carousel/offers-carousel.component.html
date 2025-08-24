@@ -1,0 +1,47 @@
+<div class="container mx-auto py-8 px-4">
+  <h2 class="text-3xl font-bold text-center mb-8 text-primary">عروضنا المميزة</h2>
+  
+  <div class="relative max-w-6xl mx-auto">
+    <!-- Swiper Container -->
+    <div class="offers-swiper rounded-2xl shadow-lg overflow-hidden bg-white">
+      <div class="swiper-wrapper">
+        <div *ngFor="let offer of offers; let i = index" class="swiper-slide">
+          <div class="relative h-64 md:h-96 lg:h-[500px] w-full">
+            <img 
+              [src]="'assets/offers/' + offer" 
+              [alt]="'عرض ' + (i + 1)"
+              class="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+              loading="lazy"
+            />
+            <!-- Gradient overlay for better text readability -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+            
+            <!-- Offer content overlay -->
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+              <div class="bg-black/40 backdrop-blur-sm rounded-xl p-4">
+                <h3 class="text-xl md:text-2xl font-bold mb-2">عرض مميز {{ i + 1 }}</h3>
+                <p class="text-sm md:text-base opacity-90">استمتع بأفضل العروض والخصومات الحصرية</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Arrows -->
+      <div class="swiper-button-prev !text-white !w-12 !h-12 !mt-0 !top-1/2 !-translate-y-1/2 !left-4 
+                  after:!text-2xl after:!font-bold bg-black/30 backdrop-blur-sm !rounded-full 
+                  hover:bg-black/50 transition-all duration-300 !z-10"></div>
+      <div class="swiper-button-next !text-white !w-12 !h-12 !mt-0 !top-1/2 !-translate-y-1/2 !right-4 
+                  after:!text-2xl after:!font-bold bg-black/30 backdrop-blur-sm !rounded-full 
+                  hover:bg-black/50 transition-all duration-300 !z-10"></div>
+
+      <!-- Pagination Dots -->
+      <div class="swiper-pagination !bottom-6 !z-10"></div>
+    </div>
+
+    <!-- Mobile-specific adjustments -->
+    <div class="md:hidden mt-4 text-center text-sm text-gray-600">
+      اسحب لليمين أو اليسار لتصفح العروض
+    </div>
+  </div>
+</div>

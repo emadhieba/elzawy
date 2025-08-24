@@ -1,1 +1,27 @@
-<p>menu-items works!</p>
+<div class="container mx-auto py-12">
+  <h2 class="text-4xl font-bold text-center mb-12 text-primary">قائمة الطعام</h2>
+  <div class="mb-16">
+    <app-categories></app-categories>
+  </div>
+  <div class="mb-20">
+    <div class="rounded-2xl shadow-sm bg-accent/40 flex flex-col md:flex-row items-center gap-8 p-8 mb-12">
+      <img src="assets/menu/grill-section.jpg" alt="ركن التسويات" class="w-40 h-40 object-cover rounded-2xl shadow-md border-4 border-accent" />
+      <div class="flex-1">
+        <h3 class="text-2xl font-bold text-primary mb-2 flex items-center gap-2">🥩 ركن التسويات</h3>
+        <p class="text-lg text-[#333] leading-relaxed">استمتع بأشهى المشاوي الطازجة من الزاوي، كفتة، كباب، شيش طاووق، مع تتبيلة خاصة وشوي على الفحم. نقدم لك تجربة لا تُنسى لعشاق اللحوم!</p>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+    <div *ngFor="let item of menuItems" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
+      <div class="relative">
+        <img [src]="'assets/menu/' + item.img" alt="{{ item.name }}" class="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105" />
+        <div class="absolute top-2 left-2 bg-primary text-surface px-4 py-1 rounded-full text-base font-bold shadow">{{ item.price }} ج.م</div>
+      </div>
+      <div class="p-6 flex flex-col items-center">
+        <span class="text-xl font-semibold text-[#333] mb-2">{{ item.name }}</span>
+        <span class="text-base text-neutral-600 text-center leading-relaxed">{{ item.desc }}</span>
+      </div>
+    </div>
+  </div>
+</div>

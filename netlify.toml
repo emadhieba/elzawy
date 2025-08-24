@@ -1,0 +1,14 @@
+[build]
+  command = "npm run build:ssr"
+  publish = "dist/zawy-web/browser"
+  functions = "dist/zawy-web/server"
+
+[dev]
+  command = "npm run dev:ssr"
+  targetPort = 4200
+  publish = "dist/zawy-web/browser"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
